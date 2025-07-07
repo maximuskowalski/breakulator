@@ -1,551 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Break Calculator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breakulator</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #2d3748;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            min-height: 100vh;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        .main-card {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            min-height: 600px;
-        }
-
-        @media (min-width: 1024px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .input-section {
-            padding: 2rem;
-            border-right: 1px solid #e2e8f0;
-        }
-
-        .output-section {
-            padding: 2rem;
-            background: #f8fafc;
-        }
-
-        @media (max-width: 1023px) {
-            .input-section {
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-            }
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-right: 0.5rem;
-        }
-
-        .section-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            opacity: 0.6;
-        }
-
-        textarea {
-            width: 100%;
-            height: 400px;
-            padding: 1.5rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.75rem;
-            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            resize: vertical;
-            transition: all 0.2s ease;
-            background: white;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        textarea::placeholder {
-            color: #a0aec0;
-            font-style: italic;
-        }
-
-        .readonly {
-            background: #f7fafc;
-            border-color: #e2e8f0;
-            color: #2d3748;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            flex: 1;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-secondary {
-            background: #718096;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .btn-secondary:hover {
-            background: #4a5568;
-            transform: translateY(-1px);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .success-message {
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .rules-card {
-            margin-top: 2rem;
-            background: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .rules-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .rules-list {
-            list-style: none;
-            padding: 0;
-            space-y: 0.5rem;
-        }
-
-        .rules-list li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: #4a5568;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .rules-list li:before {
-            content: "●";
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .format-hint {
-            background: #edf2f7;
-            border-left: 4px solid #667eea;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 0 0.5rem 0.5rem 0;
-            font-size: 0.85rem;
-            color: #4a5568;
-        }
-
-        .format-hint strong {
-            color: #2d3748;
-        }
-
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 300px;
-            color: #a0aec0;
-            text-align: center;
-        }
-
-        .empty-state-icon {
-            width: 4rem;
-            height: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-    </style>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Luxon (date + time helper) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.3/luxon.min.js"></script>
+  <!-- Chart.js (timeline) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Break Calculator</h1>
-            <p class="subtitle">Automatically schedule optimal break times for work shifts</p>
-        </div>
-        
-        <div class="main-card">
-            <div class="grid">
-                <div class="input-section">
-                    <div class="section-header">
-                        <div class="section-title">📝 Schedule Input</div>
-                    </div>
-                    
-                    <div class="format-hint">
-                        <strong>Format:</strong> Each person's schedule should be on 4 lines:<br>
-                        Start time → Separator (–) → End time → Name
-                    </div>
-                    
-                    <textarea 
-                        id="input" 
-                        placeholder="Paste your schedule here...
 
-Example:
-9am
- – 
-1pm
-John Smith
+<body class="flex flex-col min-h-screen bg-indigo-50">
+  <!-- ===== Header ===== -->
+  <header class="py-6 bg-indigo-600 text-white text-center shadow">
+    <h1 class="text-3xl font-semibold tracking-wide">Breakulator</h1>
+  </header>
 
-2pm
- – 
-6pm
-Jane Doe"></textarea>
-                    
-                    <div class="button-group">
-                        <button class="btn btn-primary" onclick="calculateBreaks()">
-                            ⚡ Calculate Breaks
-                        </button>
-                        <button class="btn btn-secondary" onclick="clearInput()">
-                            🗑️ Clear
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="output-section">
-                    <div class="section-header">
-                        <div class="section-title">📋 Break Schedule</div>
-                    </div>
-                    
-                    <textarea 
-                        id="output" 
-                        class="readonly" 
-                        readonly 
-                        placeholder="Your calculated break schedule will appear here..."></textarea>
-                    
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="copyOutput()" id="copyBtn" disabled>
-                            📋 Copy Results
-                        </button>
-                    </div>
-                    
-                    <div id="success-message" class="success-message">
-                        ✅ Copied to clipboard successfully!
-                    </div>
-                </div>
-            </div>
+  <!-- ===== Main ===== -->
+  <main class="container max-w-6xl mx-auto p-6 flex-grow space-y-10">
+    <!-- Input / Output Grid -->
+    <div class="grid gap-8 md:grid-cols-2">
+      <!-- === Input card === -->
+      <section class="bg-white rounded-lg shadow p-6 space-y-4">
+        <h2 class="text-xl font-semibold">Paste roster</h2>
+        <textarea id="raw" rows="16" class="w-full p-3 border rounded font-mono placeholder:italic focus:ring" placeholder="5:30am\n–\n10am\nJake Rinaldi\n…"></textarea>
+
+        <div class="flex flex-wrap gap-3">
+          <button id="run" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 active:scale-95">⚡ Calculate</button>
+          <button id="clr" class="px-4 py-2 bg-slate-100 rounded hover:bg-slate-200 active:scale-95">Clear</button>
+          <button id="csv" class="px-4 py-2 bg-emerald-600 text-white rounded hidden">CSV</button>
+          <button id="cpy" class="px-4 py-2 bg-sky-600 text-white rounded hidden">Copy</button>
         </div>
-        
-        <div class="rules-card">
-            <div class="rules-title">
-                ⚙️ Break Rules
-            </div>
-            <ul class="rules-list">
-                <li><strong>Up to 3 hours:</strong> One 10-minute break (placed at midpoint)</li>
-                <li><strong>3 to 5 hours:</strong> One 15-minute break (placed at midpoint)</li>
-                <li><strong>Over 5 hours:</strong> 15-minute break at ¼ point + 30-minute break later</li>
-                <li><strong>Smart scheduling:</strong> Breaks automatically adjusted to avoid conflicts</li>
-                <li><strong>Quarter-hour alignment:</strong> All breaks scheduled on :00, :15, :30, or :45</li>
-            </ul>
+        <p id="msg" class="text-sm text-emerald-600 hidden" role="status"></p>
+      </section>
+
+      <!-- === Output card === -->
+      <section class="bg-white rounded-lg shadow p-6 space-y-4">
+        <h2 class="text-xl font-semibold">Break schedule</h2>
+        <div class="overflow-x-auto">
+          <table id="tbl" class="min-w-full text-sm hidden">
+            <thead class="bg-slate-100">
+              <tr>
+                <th class="px-3 py-1 text-left">Name</th>
+                <th class="px-3 py-1 text-left">Start</th>
+                <th class="px-3 py-1 text-left">End</th>
+                <th class="px-3 py-1 text-left">Dur</th>
+                <th class="px-3 py-1 text-left">Breaks</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
+        <textarea id="out" rows="6" class="w-full p-2 border rounded font-mono text-xs hidden" readonly></textarea>
+      </section>
     </div>
 
-    <script>
-        // Convert time string to minutes since midnight
-        function timeToMinutes(timeStr) {
-            // Handle various time formats like "5:30am", "5am", "17:00", etc.
-            const match = timeStr.match(/(\d{1,2}):?(\d{0,2})\s*(am|pm)?/i);
-            if (!match) return 0;
-            
-            let hours = parseInt(match[1]);
-            const minutes = parseInt(match[2] || '0');
-            const period = match[3] ? match[3].toLowerCase() : '';
-            
-            // If no am/pm specified and hours > 12, assume 24-hour format
-            if (!period && hours > 12) {
-                return hours * 60 + minutes;
-            }
-            
-            // Handle am/pm
-            if (period === 'pm' && hours !== 12) hours += 12;
-            if (period === 'am' && hours === 12) hours = 0;
-            
-            return hours * 60 + minutes;
-        }
+    <!-- Timeline -->
+    <section class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold mb-2">Timeline</h2>
+      <div class="w-full h-96">
+        <canvas id="chart" class="w-full h-full"></canvas>
+      </div>
+    </section>
 
-        // Convert minutes since midnight to HH:MM format
-        function minutesToTime(minutes) {
-            const hours = Math.floor(minutes / 60);
-            const mins = minutes % 60;
-            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-        }
+    <!-- Break rules -->
+    <section class="max-w-prose bg-white rounded-lg shadow p-6 mx-auto text-sm text-slate-700">
+      <h3 class="text-lg font-semibold mb-2">Break rules</h3>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>≤ 3 h</strong>  10‑min break (mid‑point)</li>
+        <li><strong>3–5 h</strong>  15‑min break (mid‑point)</li>
+        <li><strong>&gt; 5 h</strong>  15‑min break @ ¼ duration + 30‑min break later</li>
+        <li>Breaks round to the next 15 min and never overlap</li>
+      </ul>
+    </section>
+  </main>
 
-        // Round time to nearest quarter hour
-        function roundToQuarterHour(minutes) {
-            const remainder = minutes % 15;
-            if (remainder === 0) return minutes;
-            return minutes + (15 - remainder);
-        }
+  <footer class="text-center text-xs py-4 text-slate-500">© 2025 Breakulator</footer>
 
-        // Check if a break time conflicts with existing breaks
-        function hasConflict(breakTime, existingBreaks) {
-            return existingBreaks.some(existing => existing.time === breakTime);
-        }
+  <!-- ===== Script ===== -->
+  <script>
+    /* -------------------------------------------------------------------------- */
+    /* Utilities                                                                  */
+    /* -------------------------------------------------------------------------- */
 
-        // Find next available quarter hour slot
-        function findAvailableTime(idealTime, existingBreaks) {
-            let time = roundToQuarterHour(idealTime);
-            while (hasConflict(time, existingBreaks)) {
-                time += 15;
-            }
-            return time;
-        }
+    const { DateTime } = luxon;
 
-        // Format name for output
-        function formatName(name) {
-            const parts = name.trim().split(/\s+/);
-            if (parts.length === 1) return parts[0];
-            return `${parts[0]} ${parts[parts.length - 1][0]}.`;
-        }
+    /** Round minutes up to the next quarter‑hour */
+    const roundToQuarter = (m) => (m % 15 === 0 ? m : m + (15 - (m % 15)));
 
-        // Calculate duration in hours
-        function calculateDuration(startMinutes, endMinutes) {
-            const durationMinutes = endMinutes - startMinutes;
-            return durationMinutes / 60;
-        }
+    /** Convert “9:30am” → minutes since midnight */
+    const parseTime = (str) => {
+      const match = str.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+      if (!match) return null;
 
-        function calculateBreaks() {
-            const inputText = document.getElementById('input').value.trim();
-            
-            if (!inputText) {
-                alert('Please enter schedule data first!');
-                return;
-            }
+      let hours   = Number(match[1]);
+      const mins  = Number(match[2] || 0);
+      const suffix = (match[3] || '').toLowerCase();
 
-            // Add loading state
-            const btn = document.querySelector('.btn-primary');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '⏳ Calculating...';
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                const lines = inputText.split('\n');
-                const sessions = [];
-                const scheduledBreaks = [];
-                
-                // Parse input - handle multi-line format
-                for (let i = 0; i < lines.length; i += 4) {
-                    if (i + 3 < lines.length) {
-                        const startTimeStr = lines[i].trim();
-                        const separator = lines[i + 1].trim();
-                        const endTimeStr = lines[i + 2].trim();
-                        const name = lines[i + 3].trim();
-                        
-                        // Skip if any required field is empty
-                        if (!startTimeStr || !endTimeStr || !name) continue;
-                        
-                        const startTime = timeToMinutes(startTimeStr);
-                        const endTime = timeToMinutes(endTimeStr);
-                        
-                        // Skip if time parsing failed or times are invalid
-                        if (startTime >= endTime) continue;
-                        
-                        sessions.push({
-                            name,
-                            startTime,
-                            endTime,
-                            startTimeStr: minutesToTime(startTime),
-                            endTimeStr: minutesToTime(endTime)
-                        });
-                    }
-                }
+      // Handle AM/PM vs 24‑hour input
+      if (!suffix && hours > 12) return hours * 60 + mins;
+      if (suffix === 'pm' && hours !== 12) hours += 12;
+      if (suffix === 'am' && hours === 12) hours = 0;
 
-                const results = [];
+      return hours * 60 + mins;
+    };
 
-                sessions.forEach(session => {
-                    const duration = calculateDuration(session.startTime, session.endTime);
-                    const breaks = [];
+    /** Convert minutes since midnight → “9:30am” */
+    const formatTime = (m) =>
+      DateTime.fromObject({ hour: Math.floor(m / 60) % 24, minute: m % 60 }).toFormat('h:mma').toLowerCase();
 
-                    if (duration <= 3) {
-                        // 10-minute break at midpoint
-                        const midpoint = session.startTime + (session.endTime - session.startTime) / 2;
-                        const breakTime = findAvailableTime(midpoint, scheduledBreaks);
-                        breaks.push({ length: 10, time: breakTime });
-                        scheduledBreaks.push({ time: breakTime });
-                    } else if (duration <= 5) {
-                        // 15-minute break at midpoint
-                        const midpoint = session.startTime + (session.endTime - session.startTime) / 2;
-                        const breakTime = findAvailableTime(midpoint, scheduledBreaks);
-                        breaks.push({ length: 15, time: breakTime });
-                        scheduledBreaks.push({ time: breakTime });
-                    } else {
-                        // Over 5 hours: 15-min at 1/4, 30-min later
-                        const quarterPoint = session.startTime + (session.endTime - session.startTime) / 4;
-                        const firstBreakTime = findAvailableTime(quarterPoint, scheduledBreaks);
-                        breaks.push({ length: 15, time: firstBreakTime });
-                        scheduledBreaks.push({ time: firstBreakTime });
+    /* -------------------------------------------------------------------------- */
+    /* Parsing & break scheduling                                                 */
+    /* -------------------------------------------------------------------------- */
 
-                        // Second break: halfway between end of first break and end of shift
-                        const firstBreakEnd = firstBreakTime + 15;
-                        const secondBreakIdeal = firstBreakEnd + (session.endTime - firstBreakEnd) / 2;
-                        const secondBreakTime = findAvailableTime(secondBreakIdeal, scheduledBreaks);
-                        breaks.push({ length: 30, time: secondBreakTime });
-                        scheduledBreaks.push({ time: secondBreakTime });
-                    }
+    /** Parse raw textarea lines into shift objects */
+    const parseRoster = (text) => {
+      const lines  = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+      const shifts = [];
 
-                    // Format output
-                    const formattedName = formatName(session.name);
-                    const durationStr = duration.toString();
-                    const breakInfo = breaks.map(b => `Break ${b.length} at ${minutesToTime(b.time)}`).join(', ');
-                    
-                    results.push(`${formattedName}: ${session.startTimeStr}-${session.endTimeStr} (${durationStr} hours), ${breakInfo}`);
-                });
+      for (let i = 0; i + 3 < lines.length; i += 4) {
+        const start = parseTime(lines[i]);
+        const end   = parseTime(lines[i + 2]);
+        const name  = lines[i + 3];
 
-                document.getElementById('output').value = results.join('\n');
-                document.getElementById('copyBtn').disabled = false;
-                
-                // Reset button
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 300);
-        }
+        if (start == null || end == null || start >= end) continue; // skip invalid rows
 
-        function copyOutput() {
-            const output = document.getElementById('output');
-            output.select();
-            output.setSelectionRange(0, 99999);
-            
-            navigator.clipboard.writeText(output.value).then(() => {
-                const successMessage = document.getElementById('success-message');
-                successMessage.style.display = 'block';
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 3000);
-            });
-        }
-
-        function clearInput() {
-            document.getElementById('input').value = '';
-            document.getElementById('output').value = '';
-            document.getElementById('copyBtn').disabled = true;
-            document.getElementById('input').focus();
-        }
-
-        // Auto-focus input on load
-        window.addEventListener('load', () => {
-            document.getElementById('input').focus();
+        shifts.push({
+          name,
+          startStr: lines[i],
+          endStr:   lines[i + 2],
+          start,
+          end,
+          dur: end - start,
         });
-    </script>
+      }
+      return shifts;
+    };
+
+    /** Add breaks according to the rules (mutates shift objects) */
+    const scheduleBreaks = (shifts) => {
+      const taken = new Set(); // global list to avoid overlap
+
+      const reserve = (len, ideal) => {
+        let t = roundToQuarter(ideal);
+        while (taken.has(t)) t += 15;
+        taken.add(t);
+        return { len, time: t };
+      };
+
+      shifts.forEach((s) => {
+        s.br = [];
+        const hrs = s.dur / 60;
+
+        if (hrs <= 3) {
+          s.br.push(reserve(10, s.start + s.dur / 2));
+        } else if (hrs <= 5) {
+          s.br.push(reserve(15, s.start + s.dur / 2));
+        } else {
+          s.br.push(reserve(15, s.start + s.dur / 4));
+          const firstEnd = s.br[0].time + 15;
+          s.br.push(reserve(30, firstEnd + (s.end - firstEnd) / 2));
+        }
+      });
+
+      return shifts;
+    };
+
+    /* -------------------------------------------------------------------------- */
+    /* DOM refs                                                                   */
+    /* -------------------------------------------------------------------------- */
+
+    const raw   = document.getElementById('raw');
+    const run   = document.getElementById('run');
+    const clr   = document.getElementById('clr');
+    const csvBtn= document.getElementById('csv');
+    const cpyBtn= document.getElementById('cpy');
+    const msg   = document.getElementById('msg');
+
+    const tbl   = document.getElementById('tbl');
+    const tbody = tbl.querySelector('tbody');
+    const out   = document.getElementById('out');
+    const chartEl = document.getElementById('chart');
+
+    let chartInstance;
+
+    /* -------------------------------------------------------------------------- */
+    /* Rendering helpers                                                          */
+    /* -------------------------------------------------------------------------- */
+
+    const renderTable = (shifts) => {
+      tbody.innerHTML = '';
+      shifts.forEach((s) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-3 py-1 whitespace-nowrap">${s.name}</td>
+          <td class="px-3 py-1">${s.startStr}</td>
+          <td class="px-3 py-1">${s.endStr}</td>
+          <td class="px-3 py-1">${(s.dur / 60).toFixed(2)} h</td>
+          <td class="px-3 py-1">${s.br.map((b) => `${b.len}′ @ ${formatTime(b.time)}`).join('; ')}</td>`;
+        tbody.appendChild(row);
+      });
+      tbl.classList.toggle('hidden', !shifts.length);
+    };
+
+    const toPlaintext = (shifts) =>
+      shifts
+        .map(
+          (s) =>
+            `${s.name}: ${s.startStr}-${s.endStr} ${(s.dur / 60).toFixed(2)}h, ` +
+            s.br.map((b) => `${b.len} @ ${formatTime(b.time)}`).join(', ')
+        )
+        .join('\n');
+
+    const toCSV = (shifts) => {
+      const header = 'Name,Start,End,Duration(h),Breaks\n';
+      const rows = shifts
+        .map(
+          (s) =>
+            `${s.name},${s.startStr},${s.endStr},${(s.dur / 60).toFixed(2)},"${s.br
+              .map((b) => `${b.len}@${formatTime(b.time)}`)
+              .join(';')}"`
+        )
+        .join('\n');
+      return header + rows + '\n';
+    };
+
+    const drawTimeline = (shifts) => {
+      if (chartInstance) chartInstance.destroy();
+      if (!shifts.length) return;
+
+      const earliest = Math.min(...shifts.map((s) => s.start));
+      const latest   = Math.max(...shifts.map((s) => s.end));
+
+      chartInstance = new Chart(chartEl, {
+        type: 'bar',
+        data: {
+          labels: shifts.map((s) => s.name.split(' ')[0]),
+          datasets: [
+            {
+              // invisible offset bars
+              data: shifts.map((s) => s.start - earliest),
+              backgroundColor: 'rgba(0,0,0,0)',
+              stack: 'shift',
+            },
+            {
+              data: shifts.map((s) => s.dur),
+              backgroundColor: 'rgba(99,102,241,.75)',
+              stack: 'shift',
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              stacked: true,
+              min: 0,
+              max: latest - earliest,
+              ticks: {
+                maxTicksLimit: 10,
+                callback: (v) => formatTime(v + earliest),
+              },
+              title: {
+                display: true,
+                text: 'Time of day',
+              },
+            },
+            y: { stacked: true },
+          },
+          plugins: {
+            legend: { display: false },
+          },
+        },
+      });
+    };
+
+    /* -------------------------------------------------------------------------- */
+    /* Event handlers                                                             */
+    /* -------------------------------------------------------------------------- */
+
+    run.addEventListener('click', () => {
+      const rawText = raw.value.trim();
+      if (!rawText) return alert('Please paste your roster.');
+
+      const shifts = scheduleBreaks(parseRoster(rawText));
+      renderTable(shifts);
+      drawTimeline(shifts);
+
+      // Populate plaintext & toggle visibility
+      const plain = toPlaintext(shifts);
+      out.value = plain;
+      out.classList.toggle('hidden', !shifts.length);
+
+      // Status message
+      msg.textContent = `${shifts.length} shift${shifts.length !== 1 ? 's' : ''} processed`;
+      msg.classList.remove('hidden');
+
+      // Toggle extra buttons
+      const hasData = Boolean(shifts.length);
+      csvBtn.classList.toggle('hidden', !hasData);
+      cpyBtn.classList.toggle('hidden', !hasData);
+
+      // CSV download
+      csvBtn.onclick = () => {
+        const blob = new Blob([toCSV(shifts)], { type: 'text/csv' });
+        const a = Object.assign(document.createElement('a'), {
+          href: URL.createObjectURL(blob),
+          download: 'breaks.csv',
+        });
+        a.click();
+        URL.revokeObjectURL(a.href);
+      };
+
+      // Copy plaintext
+      cpyBtn.onclick = () => {
+        navigator.clipboard.writeText(plain);
+        msg.textContent = 'Copied to clipboard!';
+      };
+    });
+
+    clr.addEventListener('click', () => {
+      raw.value = '';
+      renderTable([]);
+      if (chartInstance) chartInstance.destroy();
+      out.classList.add('hidden');
+      msg.classList.add('hidden');
+      csvBtn.classList.add('hidden');
+      cpyBtn.classList.add('hidden');
+    });
+
+    // Convenience: Ctrl+Enter submits
+    raw.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'Enter') run.click();
+    });
+  </script>
 </body>
 </html>
